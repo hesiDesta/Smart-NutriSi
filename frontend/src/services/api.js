@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 
-const BASE = import.meta.env.VITE_API_URL || 'https://smart-nutrisi-tracker.loca.lt/api';
+const BASE = import.meta.env.VITE_API_URL || 'https://9421cf9faac4c2.lhr.life/api';
 
 const getToken = () => localStorage.getItem('nutrisi_token');
 
