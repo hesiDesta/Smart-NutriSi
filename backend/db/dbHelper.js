@@ -1,11 +1,18 @@
 const mysql = require('mysql2/promise');
 
-// 1. Membuat Pool Koneksi MySQL Laragon
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_USER = process.env.DB_USER || 'root';
+const DB_PASSWORD = process.env.DB_PASSWORD || '';
+const DB_NAME = process.env.DB_NAME || 'smart nutrition tracker';
+const DB_PORT = process.env.DB_PORT || 3306;
+
+// 1. Membuat Pool Koneksi MySQL
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '', // Default password di Laragon adalah kosong
-  database: 'smart nutrition tracker', // Menggunakan nama database Anda dari phpMyAdmin
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_NAME,
+  port: DB_PORT,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -16,11 +23,12 @@ async function initDb() {
   try {
     // Buat database jika belum ada
     const tempConn = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '' // Default password di Laragon adalah kosong
+      host: DB_HOST,
+      user: DB_USER,
+      password: DB_PASSWORD,
+      port: DB_PORT
     });
-    await tempConn.query('CREATE DATABASE IF NOT EXISTS `smart nutrition tracker`');
+    await tempConn.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\``);
     await tempConn.end();
 
     // Membuat tabel users
