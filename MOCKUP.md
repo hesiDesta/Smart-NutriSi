@@ -1,0 +1,285 @@
+# NutriSi — Mockup & Desain UI Aplikasi
+
+> Dokumen ini merupakan representasi visual dari desain dan antarmuka pengguna (UI) aplikasi NutriSi — Smart Nutrition Tracker untuk anak usia 1–6 tahun.
+
+---
+
+## 🎨 Design System
+
+### Palet Warna Utama
+
+| Nama       | Hex       | Penggunaan                          |
+|------------|-----------|-------------------------------------|
+| Pink Base  | `#FCE4EC` | Background utama seluruh halaman    |
+| Pink Accent| `#F89EBD` | Kartu Sarapan, tombol CTA           |
+| Green Soft | `#8DD68F` | Kartu Cemilan, indikator status OK  |
+| Purple Soft| `#B5A2EC` | Kartu Makan Siang                   |
+| Yellow Warm| `#FFD166` | Kartu Makan Malam, energi           |
+| Dark Text  | `#2D2D2D` | Teks utama                          |
+| Gray Sub   | `#888888` | Teks sekunder / subtitle            |
+
+### Tipografi
+- **Font Utama**: Poppins (Google Fonts)
+- **Weight**: 500 (medium), 700 (bold), 700 italic
+- **Hierarchy**: 28px judul besar → 18px judul seksi → 14px body → 12px label
+
+---
+
+## 📱 Alur Halaman (User Flow)
+
+```
+[Onboarding]
+     ↓
+[Register / Login]
+     ↓
+[Personalisasi Profil Anak]
+     ↓
+[Home Dashboard] ←→ [Log Makanan]
+     ↓                    ↓
+[Detail AKG]         [Riwayat]
+     ↓
+[Rekomendasi ML]
+     ↓
+[Profil]
+```
+
+---
+
+## 🖼️ Wireframe per Halaman
+
+### 1. Onboarding
+```
+┌─────────────────────────────┐
+│   [Logo NutriSi floating]   │
+│                             │
+│   Ilustrasi hero (hero.png) │
+│                             │
+│  "Pantau Gizi Si Kecil"     │
+│  subtitle deskripsi singkat │
+│                             │
+│  ┌─────────────────────┐    │
+│  │    Mulai Sekarang   │    │
+│  └─────────────────────┘    │
+└─────────────────────────────┘
+```
+
+### 2. Login
+```
+┌─────────────────────────────┐
+│  ← Kembali                  │
+│                             │
+│  [Ilustrasi kiri (lg:)]     │
+│                             │
+│  Username  [____________]   │
+│  Password  [____________]   │
+│                             │
+│  [Lupa Sandi?]              │
+│  ┌─────────────────────┐    │
+│  │       Masuk         │    │
+│  └─────────────────────┘    │
+│  Belum punya akun? Daftar   │
+└─────────────────────────────┘
+```
+
+### 3. Register
+```
+┌─────────────────────────────┐
+│  ← Kembali                  │
+│                             │
+│  Username  [____________]   │
+│  Password  [____________]   │
+│  Konfirmasi[____________]   │
+│                             │
+│  ┌─────────────────────┐    │
+│  │       Daftar        │    │
+│  └─────────────────────┘    │
+│  Sudah punya akun? Masuk    │
+└─────────────────────────────┘
+```
+
+### 4. Personalisasi Profil Anak
+```
+┌─────────────────────────────┐
+│  Profil Si Kecil            │
+│  ─────────────────────────  │
+│  Nama Anak   [___________]  │
+│  Tgl Lahir   [___________]  │
+│  Jenis Kelamin ○L  ○P       │
+│  Tinggi Badan[___________]  │
+│  Berat Badan [___________]  │
+│  Alergi      [___________]  │
+│  Kond. Khusus[___________]  │
+│                             │
+│  ┌─────────────────────┐    │
+│  │       Simpan        │    │
+│  └─────────────────────┘    │
+└─────────────────────────────┘
+```
+
+### 5. Home Dashboard
+```
+┌─────────────────────────────────────────────────┐
+│  MOBILE                │  DESKTOP (lg:)          │
+│  ──────────────────    │  ──────────────────     │
+│  Halo, [Nama]! 👋      │  [Panel Kiri 52%]       │
+│  Tanggal hari ini      │  Halo [Nama]            │
+│                        │  Donut Chart AKG        │
+│  [Donut Chart AKG]     │  Progress bar nutrisi   │
+│  Overall: 85%          │  Catatan makan hari ini │
+│                        │  [+ Log Makanan]        │
+│  Nutrisi bar (4 item): │                         │
+│  ⚡ Energi  ████░ 93%  │  [Panel Kanan 48%]      │
+│  🍗 Protein ███░░ 83%  │  Kalender mini          │
+│  💧 Kalium  ████░ 100% │  Daftar makan hari ini  │
+│  🌿 Zat Besi██░░░ 67%  │  dengan kartu warna     │
+│                        │                         │
+│  Daftar Makan Hari Ini │                         │
+│  [Sarapan card]        │                         │
+│  [Cemilan card]        │                         │
+│  [+ Tambah Makanan]    │                         │
+│                        │                         │
+│  Bottom Nav:           │                         │
+│  🏠 📋 ➕ 👤           │                         │
+└─────────────────────────────────────────────────┘
+```
+
+### 6. Log Makanan
+```
+┌─────────────────────────────┐
+│  ← Log Makanan              │
+│  Pilih Waktu Makan:         │
+│  [Sarapan][Cemilan][Siang]  │
+│  [Malam]                    │
+│  ─────────────────────────  │
+│  🔍 Cari makanan...         │
+│  ─────────────────────────  │
+│  Hasil Pencarian:           │
+│  ┌───────────────────────┐  │
+│  │ 🍗 Ayam Goreng        │  │
+│  │ 165 kkal | P: 31g     │  │
+│  │            [+ Tambah] │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ 🐟 Ikan Tuna          │  │
+│  │ 132 kkal | P: 29g     │  │
+│  │            [+ Tambah] │  │
+│  └───────────────────────┘  │
+│  ...                        │
+└─────────────────────────────┘
+```
+
+### 7. Riwayat
+```
+┌─────────────────────────────┐
+│  ← Riwayat Gizi             │
+│  Bar chart 7 hari terakhir  │
+│  ─────────────────────────  │
+│  Filter: [Minggu▾]          │
+│  ─────────────────────────  │
+│  Minggu, 25 Mei             │
+│  ┌─────────────────────┐    │
+│  │ Sarapan – Nasi Goreng│    │
+│  │ 350 kkal | 12g protein│   │
+│  │ [🗑 Hapus]          │    │
+│  └─────────────────────┘    │
+│  ...                        │
+└─────────────────────────────┘
+```
+
+### 8. Rekomendasi ML
+```
+┌─────────────────────────────┐
+│  ← Rekomendasi Gizi         │
+│                             │
+│  Skor Gizi Hari Ini: 78%    │
+│  [Donut Chart besar]        │
+│                             │
+│  Status Nutrisi:            │
+│  🍗 Protein  ████░░ 67%    │
+│  🌿 Zat Besi ██░░░░ 45%    │
+│  🦷 Kalsium  █████░ 80%    │
+│                             │
+│  Rekomendasi Makanan:       │
+│  ┌──────────────────────┐   │
+│  │ Sarapan              │   │
+│  │ 🍳 Telur Rebus Gandum│   │
+│  │ "Kaya protein tinggi"│   │
+│  └──────────────────────┘   │
+│  ...                        │
+└─────────────────────────────┘
+```
+
+### 9. Detail AKG
+```
+┌─────────────────────────────┐
+│  ← Angka Kecukupan Gizi     │
+│                             │
+│  Profil: [Nama Anak]        │
+│  Usia: 3 tahun 2 bulan      │
+│  Kelompok: 1–3 Tahun        │
+│                             │
+│  ┌──────────────────────┐   │
+│  │ ⚡ Energi  1.350 kkal│   │
+│  │ 🍗 Protein    20 g  │   │
+│  │ 🦷 Kalsium   650 mg │   │
+│  │ 🌿 Zat Besi    7 mg │   │
+│  │ 💧 Kalium  2.600 mg │   │
+│  │ 🌾 Karbohidrat 215g │   │
+│  │ 💛 Lemak Baik  45 g │   │
+│  │ 🍊 Vitamin C   40mg │   │
+│  └──────────────────────┘   │
+│                             │
+│  Sumber: PMK No. 28/2019    │
+└─────────────────────────────┘
+```
+
+### 10. Profil
+```
+┌─────────────────────────────┐
+│  ← Profil                   │
+│                             │
+│  👤 [Avatar inisial nama]   │
+│  Username: johndoe          │
+│                             │
+│  ─── Data Anak ───          │
+│  Nama : Budi                │
+│  Lahir: 12 Mar 2022         │
+│  JK   : Laki-laki           │
+│  TB   : 90 cm               │
+│  BB   : 13 kg               │
+│  Alergi: -                  │
+│                             │
+│  ┌─────────────────────┐    │
+│  │   Edit Profil Anak  │    │
+│  └─────────────────────┘    │
+│  ┌─────────────────────┐    │
+│  │       Logout        │    │
+│  └─────────────────────┘    │
+└─────────────────────────────┘
+```
+
+---
+
+## 📐 Breakpoints Responsif
+
+| Breakpoint | Lebar      | Tampilan                          |
+|------------|------------|-----------------------------------|
+| Mobile     | < 1024px   | Single column, Bottom Navigation  |
+| Desktop    | ≥ 1024px   | Two-column layout, Sidebar Nav    |
+
+---
+
+## 🔧 Tech Stack Visual
+
+```
+Frontend                     Backend
+──────────────────────────   ──────────────────────────
+React 19       → Komponen    Express.js  → REST API
+Vite           → Bundler     MySQL       → Database
+Tailwind CSS 4 → Styling     bcryptjs    → Auth hash
+Axios          → HTTP Client Python ML   → Prediksi gizi
+```
+
+---
+
+*Desain diimplementasikan langsung di kode React menggunakan Tailwind CSS utility classes dan inline styles. Tidak ada file desain eksternal (Figma/Adobe XD) karena desain dikembangkan code-first.*

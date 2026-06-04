@@ -1,0 +1,30 @@
+# Node
+**/node_modules/
+**/dist/
+**/dist-ssr/
+**/*.local
+**/.env
+**/.env.*
+
+# Logs
+*.log
+**/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary / Agent Scratch
+scratch/
+dom_output.txt

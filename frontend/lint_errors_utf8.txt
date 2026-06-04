@@ -1,0 +1,126 @@
+
+> smart-nutrition-tracker@0.0.0 lint
+> eslint .
+
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\App.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\context\AuthContext.jsx
+   1:8   error  'React' is defined but never used                                                                                               no-unused-vars
+  41:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\DetailAKG.jsx
+    1:8   error  'React' is defined but never used              no-unused-vars
+    7:7   error  'InfoIcon' is assigned a value but never used  no-unused-vars
+  150:45  error  'onNavigate' is defined but never used         no-unused-vars
+  158:10  error  'loading' is assigned a value but never used   no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\EditProfile.jsx
+    1:8   error  'React' is defined but never used                 no-unused-vars
+  337:9   error  'MobileView' is assigned a value but never used   no-unused-vars
+  353:12  error  'AvatarArea' is not defined                       no-undef
+  364:12  error  'FormContent' is not defined                      no-undef
+  365:12  error  'SaveButton' is not defined                       no-undef
+  379:9   error  'DesktopView' is assigned a value but never used  no-unused-vars
+  400:10  error  'SaveButton' is not defined                       no-undef
+  409:14  error  'AvatarArea' is not defined                       no-undef
+  442:12  error  'FormContent' is not defined                      no-undef
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\Home.jsx
+    1:8   error  'React' is defined but never used             no-unused-vars
+  206:59  error  'onRekomendasi' is defined but never used     no-unused-vars
+  215:10  error  'loading' is assigned a value but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\KalenderNotifikasi.jsx
+    1:8   error  'React' is defined but never used  no-unused-vars
+  490:52  error  'setTab' is not defined            no-undef
+  492:33  error  'tab' is not defined               no-undef
+  502:14  error  'tab' is not defined               no-undef
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\LoadingError.jsx
+   1:8  error  'React' is defined but never used                   no-unused-vars
+  54:7  error  'stickerShadow' is assigned a value but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\LogMakanan.jsx
+    1:8   error  'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+  555:10  error  'loading' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+  561:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  559 |   useEffect(() => {
+  560 |     if (query.trim().length < 1) {
+> 561 |       setResults([]);
+      |       ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  562 |       return;
+  563 |     }
+  564 |     const delayDebounceFn = setTimeout(async () => {  react-hooks/set-state-in-effect
+  591:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  589 |
+  590 |   useEffect(() => {
+> 591 |     fetchLogs();
+      |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  592 |   }, []);
+  593 |
+  594 |   const menu = useMemo(() => {                                                                             react-hooks/set-state-in-effect
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\Login.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\LupaSandi.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\Onboarding.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\Profile.jsx
+   1:8   error  'React' is defined but never used                   no-unused-vars
+  61:7   error  'ALERGI_PILLS' is assigned a value but never used   no-unused-vars
+  62:7   error  'KONDISI_PILLS' is assigned a value but never used  no-unused-vars
+  80:21  error  'setNotifOn' is assigned a value but never used     no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\Register.jsx
+  1:8  error  'React' is defined but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\Rekomendasi.jsx
+    1:8   error  'React' is defined but never used          no-unused-vars
+  178:21  error  'rest' is assigned a value but never used  no-unused-vars
+  258:21  error  'rest' is assigned a value but never used  no-unused-vars
+
+C:\Users\Acer\OneDrive\Dokumen\CODING CAMP DICODING\Smart Nutrisi\NutriSi\frontend\src\pages\Riwayat.jsx
+    1:8   error  'React' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-unused-vars
+    7:7   error  'HISTORY' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+   80:7   error  'toKey' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+  265:10  error  'loading' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+  266:10  error  'weeklyData' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-unused-vars
+  266:21  error  'setWeeklyData' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    no-unused-vars
+  288:21  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  286 |   }, []);
+  287 |
+> 288 |   useEffect(() => { loadLogs(date); }, [date, loadLogs]);
+      |                     ^^^^^^^^ Avoid calling setState() directly within an effect
+  289 |
+  290 |   const prevDay = () => { const d=new Date(date); d.setDate(d.getDate()-1); setDate(d); };
+  291 |   const nextDay = () => { const d=new Date(date); d.setDate(d.getDate()+1); setDate(d); };  react-hooks/set-state-in-effect
+
+Γ£û 47 problems (47 errors, 0 warnings)
+
