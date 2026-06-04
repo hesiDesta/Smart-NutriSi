@@ -45,7 +45,7 @@ function App() {
                                                   onLupaSandi={() => go('lupaSandi', true)}
                                                   onLoginSuccess={(u) => go(u?.childProfile ? 'home' : 'personalisasi')} />}
       {page === 'register'     && <Register       onKeLogin={() => go('login', true)}
-                                                  onDaftar={() => go('personalisasi')} />}
+                                                  onDaftar={() => go('login')} />}
       {page === 'personalisasi'&& <Personalisasi  onSelesai={() => go('home')} />}
 
       {page === 'home'         && <Home           onLogMakanan={() => go('logMakanan')}

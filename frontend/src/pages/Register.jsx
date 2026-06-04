@@ -1,7 +1,6 @@
 import logoImg from '../assets/logo.png';
 import React, { useState } from 'react';
 import { api } from '../services/api';
-import { useAuth } from '../context/AuthContext';
 import fishIcon from '../assets/ikan2.png';
 
 const stickerShadow = `
@@ -36,7 +35,6 @@ const testimonials = [
 ];
 
 export default function Register({ onKeLogin, onDaftar }) {
-  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [parentName, setParentName] = useState('');
   const [username, setUsername] = useState('');
@@ -49,12 +47,25 @@ export default function Register({ onKeLogin, onDaftar }) {
       setError('Semua kolom wajib diisi.');
       return;
     }
+
+    // Validasi format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(username.trim())) {
+      setError('Format email tidak valid. Contoh: nama@email.com');
+      return;
+    }
+
+    // Validasi panjang password
+    if (password.length < 8) {
+      setError('Password minimal 8 karakter.');
+      return;
+    }
+
     setError('');
     setLoading(true);
     try {
       await api.register(username.trim(), password, parentName.trim());
-      const loginData = await api.login(username.trim(), password);
-      login(loginData.token, loginData.user);
+      // Setelah daftar berhasil, arahkan ke halaman login (tidak auto-login)
       onDaftar?.();
     } catch (err) {
       setError(err.message || 'Registrasi gagal. Silakan coba lagi.');
@@ -253,6 +264,7 @@ export default function Register({ onKeLogin, onDaftar }) {
                   {showPassword ? <EyeOpen /> : <EyeClosed />}
                 </button>
               </div>
+              <span className="text-gray-600 text-[12px] lg:text-[11px] mt-1 ml-2">Minimal 8 karakter</span>
             </div>
 
           </div>

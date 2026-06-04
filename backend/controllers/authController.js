@@ -45,12 +45,23 @@ exports.register = async (req, res) => {
   try {
     const { username, password, parentName } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ error: 'Username dan password wajib diisi.' });
+      return res.status(400).json({ error: 'Email dan password wajib diisi.' });
+    }
+
+    // Validasi format email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(username)) {
+      return res.status(400).json({ error: 'Format email tidak valid. Contoh: nama@email.com' });
+    }
+
+    // Validasi panjang password
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password minimal 8 karakter.' });
     }
 
     const existingUser = await Users.findByUsername(username);
     if (existingUser) {
-      return res.status(400).json({ error: 'Username sudah digunakan.' });
+      return res.status(400).json({ error: 'Email sudah digunakan.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
