@@ -2,80 +2,6 @@ import logoImg from '../assets/logo.png';
 import React, { useState, useEffect, useCallback } from 'react';
 import { api, toDateKey } from '../services/api';
 
-/* ═══════════════════════════════════════════════════════
-   DATA RIWAYAT CONTOH
-   ═══════════════════════════════════════════════════════ */
-const HISTORY = {
-  '2026-05-15': [
-    {
-      waktu: 'Pagi', jam: '07:15',
-      items: [
-        { name:'Nasi Putih',    kkal:180, protein:3.0,  kalsium:5,   gram:100 },
-        { name:'Telur Orak-arik', kkal:154, protein:12.4, kalsium:54,  gram:80  },
-        { name:'Susu Sapi',     kkal:200, protein:14.0, kalsium:145, gram:150 },
-      ],
-    },
-    {
-      waktu: 'Siang', jam: '12:00',
-      items: [
-        { name:'Nasi Putih',    kkal:180, protein:3.0,  kalsium:5,   gram:150 },
-        { name:'Ayam Goreng',   kkal:298, protein:27.0, kalsium:15,  gram:100 },
-        { name:'Bayam',         kkal:23,  protein:2.9,  kalsium:100, gram:80  },
-        { name:'Susu',          kkal:200, protein:14.0, kalsium:145, gram:100 },
-      ],
-    },
-    {
-      waktu: 'Malam', jam: '19:00',
-      items: [
-        { name:'Nasi Putih',    kkal:180, protein:3.0,  kalsium:5,   gram:120 },
-        { name:'Tempe Goreng',  kkal:201, protein:20.8, kalsium:155, gram:75  },
-        { name:'Sayur Bayam',   kkal:23,  protein:2.9,  kalsium:100, gram:100 },
-      ],
-    },
-  ],
-  '2026-05-14': [
-    {
-      waktu: 'Pagi', jam: '08:00',
-      items: [
-        { name:'Oatmeal',       kkal:150, protein:5.0,  kalsium:54,  gram:100 },
-        { name:'Pisang',        kkal:74,  protein:5.0,  kalsium:6,   gram:100 },
-        { name:'Susu Sapi',     kkal:200, protein:14.0, kalsium:145, gram:200 },
-      ],
-    },
-    {
-      waktu: 'Siang', jam: '12:30',
-      items: [
-        { name:'Nasi Putih',    kkal:180, protein:3.0,  kalsium:5,   gram:150 },
-        { name:'Ikan Salmon',   kkal:208, protein:20.0, kalsium:12,  gram:100 },
-        { name:'Wortel',        kkal:41,  protein:0.9,  kalsium:33,  gram:100 },
-      ],
-    },
-  ],
-  '2026-05-13': [
-    {
-      waktu: 'Pagi', jam: '07:30',
-      items: [
-        { name:'Roti Gandum',   kkal:247, protein:9.4,  kalsium:73,  gram:100 },
-        { name:'Telur Rebus',   kkal:154, protein:12.4, kalsium:54,  gram:100 },
-      ],
-    },
-    {
-      waktu: 'Siang', jam: '13:00',
-      items: [
-        { name:'Nasi Putih',    kkal:180, protein:3.0,  kalsium:5,   gram:200 },
-        { name:'Daging Sapi',   kkal:250, protein:26.0, kalsium:11,  gram:80  },
-        { name:'Tahu',          kkal:76,  protein:8.0,  kalsium:124, gram:100 },
-      ],
-    },
-    {
-      waktu: 'Malam', jam: '18:30',
-      items: [
-        { name:'Bubur Ayam',    kkal:120, protein:8.0,  kalsium:30,  gram:200 },
-      ],
-    },
-  ],
-};
-
 const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
 const toKey = (d) => {
@@ -265,6 +191,69 @@ export default function Riwayat({ onBack, onNavigate }) {
   const [meals,     setMeals]     = useState([]);
   const [loading,   setLoading]   = useState(false);
   const [weeklyData,setWeeklyData]= useState([]);
+  const [last3Days, setLast3Days] = useState([]);
+
+  // Fetch full history dari API (semua hari yg pernah log)
+  // dipakai untuk: grafik mingguan + 3 hari terakhir
+  useEffect(() => {
+    let cancelled = false;
+    api.getHistory().then((history) => {
+      if (cancelled || !Array.isArray(history)) return;
+
+      const akgTarget = 1400; // target rata-rata anak golden age
+
+      // Index history by date string YYYY-MM-DD
+      const map = {};
+      history.forEach((h) => { map[h.date] = h; });
+
+      // === Grafik Minggu Ini (Sen-Min minggu sekarang) ===
+      const today = new Date();
+      const dow = today.getDay();             // 0=Min ... 6=Sab
+      const offsetFromMonday = dow === 0 ? 6 : dow - 1; // Indo: Senin awal
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - offsetFromMonday);
+
+      const dayLabels = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+      const weekly = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const entry = map[key];
+        const pct = entry ? Math.min(Math.round((entry.kkal / akgTarget) * 100), 100) : 0;
+        weekly.push({
+          day: dayLabels[i],
+          pct,
+          isToday: d.toDateString() === today.toDateString(),
+          dateKey: key,
+        });
+      }
+      setWeeklyData(weekly);
+
+      // === 3 Hari Terakhir (yg ada log saja, urutkan dari terbaru) ===
+      const sorted = [...history]
+        .filter(h => h.kkal > 0)
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 3)
+        .map(h => {
+          const dt = new Date(h.date + 'T00:00:00');
+          const pct = (h.kkal / akgTarget) * 100;
+          let status = 'Kurang';
+          if (pct >= 90) status = 'Sangat Baik';
+          else if (pct >= 70) status = 'Baik';
+          else if (pct >= 50) status = 'Cukup';
+          return {
+            date: `${dt.getDate()} ${MONTHS[dt.getMonth()]}`,
+            kkal: Math.round(h.kkal),
+            protein: +h.protein.toFixed(1),
+            status,
+          };
+        });
+      setLast3Days(sorted);
+    }).catch(() => { /* silent */ });
+
+    return () => { cancelled = true; };
+  }, [meals]); // re-fetch saat meal hari ini berubah (log baru)
 
   const loadLogs = useCallback(async (d) => {
     setLoading(true);
@@ -404,50 +393,57 @@ export default function Riwayat({ onBack, onNavigate }) {
               {/* Grafik mingguan */}
               <div className="bg-white rounded-[18px] px-5 py-4 shadow-sm border border-gray-50">
                 <p className="text-gray-800 font-bold text-[14px] mb-3">Rata-rata Minggu Ini</p>
-                <div className="flex gap-2 items-end" style={{ height: 80 }}>
-                  {[
-                    { day: 'Sen', pct: 72 }, { day: 'Sel', pct: 88 }, { day: 'Rab', pct: 55 },
-                    { day: 'Kam', pct: 91 }, { day: 'Jum', pct: 78 }, { day: 'Sab', pct: 83 },
-                    { day: 'Min', pct: 60 },
-                  ].map(({ day, pct }, i) => {
-                    const isToday = i === 4;
-                    const color = pct >= 90 ? '#22C55E' : pct >= 60 ? '#f2658f' : '#EF4444';
-                    return (
-                      <div key={day} className="flex-1 flex flex-col items-center gap-1.5">
-                        <div className="w-full flex items-end justify-center" style={{ height: 64 }}>
-                          <div className="w-full max-w-[28px] rounded-full transition-all duration-500"
-                            style={{ height: `${pct}%`, backgroundColor: isToday ? color : color + '80' }} />
+                {weeklyData.length === 0 ? (
+                  <div className="text-center py-6 text-gray-400 text-[12px]">
+                    Belum ada catatan minggu ini
+                  </div>
+                ) : (
+                  <div className="flex gap-2 items-end" style={{ height: 80 }}>
+                    {weeklyData.map(({ day, pct, isToday }, i) => {
+                      const color = pct >= 90 ? '#22C55E' : pct >= 60 ? '#f2658f' : pct > 0 ? '#EF4444' : '#E5E7EB';
+                      const visualPct = pct > 0 ? Math.max(pct, 8) : 6;
+                      return (
+                        <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                          <div className="w-full flex items-end justify-center" style={{ height: 64 }}>
+                            <div className="w-full max-w-[28px] rounded-full transition-all duration-500"
+                              style={{ height: `${visualPct}%`, backgroundColor: isToday ? color : color + 'B0' }} />
+                          </div>
+                          <span className={`text-[10px] font-semibold ${isToday ? 'text-[#f2658f]' : 'text-gray-400'}`}>{day}</span>
                         </div>
-                        <span className={`text-[10px] font-semibold ${isToday ? 'text-[#f2658f]' : 'text-gray-400'}`}>{day}</span>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Nutrisi 3 hari terakhir mini table */}
               <div className="bg-white rounded-[18px] px-5 py-4 shadow-sm border border-gray-50">
                 <p className="text-gray-800 font-bold text-[14px] mb-3">3 Hari Terakhir</p>
-                <div className="flex flex-col gap-2">
-                  {[
-                    { date: '15 Mei', kkal: 737, protein: 41.6, status: 'Baik' },
-                    { date: '14 Mei', kkal: 812, protein: 46.0, status: 'Sangat Baik' },
-                    { date: '13 Mei', kkal: 683, protein: 35.4, status: 'Cukup' },
-                  ].map((row, i) => {
-                    const sColor = row.status === 'Sangat Baik' ? '#22C55E' : row.status === 'Baik' ? '#3B82F6' : '#F97316';
-                    return (
-                      <div key={i} className="flex items-center justify-between py-2
-                                              border-b border-gray-50 last:border-0">
-                        <span className="text-gray-600 font-semibold text-[13px]">{row.date}</span>
-                        <span className="text-gray-500 text-[12px]">{row.kkal} kkal</span>
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: sColor + '20', color: sColor }}>
-                          {row.status}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+                {last3Days.length === 0 ? (
+                  <div className="text-center py-6 text-gray-400 text-[12px]">
+                    Catat makanan untuk melihat ringkasan 3 hari terakhir
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {last3Days.map((row, i) => {
+                      const sColor = row.status === 'Sangat Baik' ? '#22C55E'
+                                   : row.status === 'Baik'         ? '#3B82F6'
+                                   : row.status === 'Cukup'        ? '#F97316'
+                                                                   : '#EF4444';
+                      return (
+                        <div key={i} className="flex items-center justify-between py-2
+                                                border-b border-gray-50 last:border-0">
+                          <span className="text-gray-600 font-semibold text-[13px]">{row.date}</span>
+                          <span className="text-gray-500 text-[12px]">{row.kkal} kkal</span>
+                          <span className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: sColor + '20', color: sColor }}>
+                            {row.status}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
 

@@ -270,6 +270,7 @@ export default function Rekomendasi({ onBack, onNavigate }) {
   const childName = user?.childProfile?.namaAnak || 'Anak';
   const [activeTab, setActiveTab] = useState(0);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [bottomBarHidden, setBottomBarHidden] = useState(false);
   const [activeNav, setActiveNav] = useState(2);
 
   const [recs, setRecs]                 = useState({});
@@ -341,43 +342,34 @@ export default function Rekomendasi({ onBack, onNavigate }) {
   }, [selectedRec]);
 
   const handleGenerateAiMenu = async () => {
-    console.log('handleGenerateAiMenu click handler triggered!');
-    alert('Memulai proses racik menu untuk ' + selectedIngredients.length + ' bahan...');
-    if (selectedIngredients.length === 0) {
-      console.log('Selected ingredients is empty!');
-      return;
-    }
-    
+    if (selectedIngredients.length === 0) return;
+
     setAiMenuLoading(true);
     setAiMenuData(null);
     try {
-      console.log('Sending ingredients to API:', selectedIngredients);
       const res = await api.generateMenu(selectedIngredients);
-      console.log('API response received:', res);
       if (res.success) {
         setAiMenuData(res.data);
-        console.log('aiMenuData state updated with:', res.data);
+        // Sembunyikan bottom bar setelah berhasil, supaya hasil tidak tertutup
+        setBottomBarHidden(true);
         setTimeout(() => {
           const el = document.getElementById('combined-result-section');
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
-            console.log('Scrolled to combined-result-section successfully.');
-          } else {
-            console.log('combined-result-section element not found in DOM.');
-          }
-        }, 150);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 200);
       } else {
         throw new Error('Gagal memproses resep AI.');
       }
     } catch (err) {
-      console.error('Error in handleGenerateAiMenu:', err);
-      alert('Error: ' + (err.message || 'Terjadi kesalahan saat memanggil model AI.'));
+      console.error('Error generating AI menu:', err);
+      setAiMenuData({ error: err.message || 'Terjadi kesalahan saat memanggil model AI.' });
     } finally {
       setAiMenuLoading(false);
     }
   };
 
   const toggleAdd = (item) => {
+    // Saat user menambah/menghapus bahan, tampilkan kembali bottom bar
+    setBottomBarHidden(false);
     setSelectedIngredients(prev => {
       const exists = prev.some(x => x.name === (item.name || item.nama));
       if (exists) {
@@ -453,7 +445,7 @@ export default function Rekomendasi({ onBack, onNavigate }) {
           <h1 className="flex-1 text-center text-[#f2658f] font-bold text-[20px] mr-6">Rekomendasi Menu</h1>
         </div>
 
-        <div className="flex-1 overflow-y-auto pb-32 px-4 flex flex-col gap-4">
+        <div className="flex-1 overflow-y-auto pb-44 px-4 flex flex-col gap-4">
           {/* ML Model Badge */}
           <div className="bg-white rounded-2xl px-4 py-3 shadow-sm flex items-center gap-3 anim-scale-in anim-d1">
             <div className="w-10 h-10 bg-pink-100 rounded-xl flex items-center justify-center"><BrainIcon /></div>
@@ -638,25 +630,42 @@ export default function Rekomendasi({ onBack, onNavigate }) {
           )}
         </div>
 
-        {selectedIngredients.length > 0 && (
-          <div className="fixed bottom-24 left-4 right-4 z-40 bg-white/90 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-pink-100 flex items-center justify-between anim-scale-in">
-            <div className="flex items-center gap-2">
-              <span className="text-[20px]">🤖</span>
-              <div className="text-left">
+        {selectedIngredients.length > 0 && !bottomBarHidden && (
+          <div className="fixed bottom-24 left-4 right-4 z-40 bg-white/95 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-pink-100 flex items-center justify-between anim-scale-in">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <span className="text-[20px] flex-shrink-0">🤖</span>
+              <div className="text-left min-w-0">
                 <p className="font-bold text-gray-800 text-[12px]">{selectedIngredients.length} Bahan Terpilih</p>
-                <p className="text-gray-500 text-[10px] truncate max-w-[140px]">{selectedIngredients.map(i => i.name).join(', ')}</p>
+                <p className="text-gray-500 text-[10px] truncate">{selectedIngredients.map(i => i.name).join(', ')}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 flex-shrink-0">
               <button onClick={() => setSelectedIngredients([])} className="text-gray-400 hover:text-gray-600 font-bold text-[11px] px-2 py-1">
                 Reset
               </button>
               <button onClick={handleGenerateAiMenu}
-                      className="bg-[#f2658f] hover:bg-[#d94876] active:scale-95 text-white font-bold text-[12px] px-4 py-2 rounded-xl transition-all shadow">
-                Buat Menu AI ✨
+                      disabled={aiMenuLoading}
+                      className="bg-[#f2658f] hover:bg-[#d94876] active:scale-95 text-white font-bold text-[12px] px-3 py-2 rounded-xl transition-all shadow disabled:opacity-60">
+                {aiMenuLoading ? 'Meracik...' : 'Buat Menu AI ✨'}
+              </button>
+              <button onClick={() => setBottomBarHidden(true)}
+                      title="Sembunyikan"
+                      className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center text-[12px] font-bold transition-colors">
+                ✕
               </button>
             </div>
           </div>
+        )}
+
+        {/* Tombol munculkan lagi saat bottom bar disembunyikan */}
+        {selectedIngredients.length > 0 && bottomBarHidden && (
+          <button
+            onClick={() => setBottomBarHidden(false)}
+            className="fixed bottom-24 right-4 z-40 bg-[#f2658f] hover:bg-[#d94876] text-white rounded-full
+                       px-3 py-2 shadow-lg flex items-center gap-1.5 text-[11px] font-bold anim-scale-in">
+            <span>🤖</span>
+            <span>{selectedIngredients.length} bahan</span>
+          </button>
         )}
 
         {/* Fixed Bottom Nav */}
@@ -880,25 +889,42 @@ export default function Rekomendasi({ onBack, onNavigate }) {
           </div>
 
           {/* Desktop floating selection bar */}
-          {selectedIngredients.length > 0 && (
-            <div className="absolute bottom-6 left-10 right-10 z-40 bg-white/90 backdrop-blur-md rounded-3xl px-6 py-4 shadow-xl border border-pink-100 flex items-center justify-between anim-scale-in">
-              <div className="flex items-center gap-3">
-                <span className="text-[28px]">🤖</span>
-                <div className="text-left">
+          {selectedIngredients.length > 0 && !bottomBarHidden && (
+            <div className="absolute bottom-6 left-10 right-10 z-40 bg-white/95 backdrop-blur-md rounded-3xl px-6 py-4 shadow-xl border border-pink-100 flex items-center justify-between anim-scale-in">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <span className="text-[28px] flex-shrink-0">🤖</span>
+                <div className="text-left min-w-0">
                   <p className="font-bold text-gray-800 text-[14px]">{selectedIngredients.length} Bahan Terpilih</p>
-                  <p className="text-gray-500 text-[11px] max-w-md truncate">{selectedIngredients.map(i => i.name).join(', ')}</p>
+                  <p className="text-gray-500 text-[11px] truncate">{selectedIngredients.map(i => i.name).join(', ')}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <button onClick={() => setSelectedIngredients([])} className="text-gray-400 hover:text-gray-600 font-bold text-[13px] px-3 py-2">
                   Reset
                 </button>
                 <button onClick={handleGenerateAiMenu}
-                        className="bg-[#f2658f] hover:bg-[#d94876] active:scale-95 text-white font-bold text-[13px] px-6 py-3 rounded-2xl transition-all shadow-md">
-                  Buat Menu Cerdas AI ✨
+                        disabled={aiMenuLoading}
+                        className="bg-[#f2658f] hover:bg-[#d94876] active:scale-95 text-white font-bold text-[13px] px-6 py-3 rounded-2xl transition-all shadow-md disabled:opacity-60">
+                  {aiMenuLoading ? 'Meracik...' : 'Buat Menu Cerdas AI ✨'}
+                </button>
+                <button onClick={() => setBottomBarHidden(true)}
+                        title="Sembunyikan"
+                        className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center font-bold transition-colors">
+                  ✕
                 </button>
               </div>
             </div>
+          )}
+
+          {/* Tombol munculkan lagi (desktop) */}
+          {selectedIngredients.length > 0 && bottomBarHidden && (
+            <button
+              onClick={() => setBottomBarHidden(false)}
+              className="absolute bottom-8 right-10 z-40 bg-[#f2658f] hover:bg-[#d94876] text-white rounded-full
+                         px-4 py-2.5 shadow-lg flex items-center gap-2 text-[12px] font-bold anim-scale-in">
+              <span>🤖</span>
+              <span>{selectedIngredients.length} bahan terpilih</span>
+            </button>
           )}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import logoImg from '../assets/logo.png';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 
 /* ═══════════════════════════════════════════════════════
    ICONS
@@ -75,7 +76,7 @@ const AvatarPlaceholder = ({ size = 80 }) => (
 /* ═══════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════ */
-export default function Profile({ onBack, onNavigate, onLogout, onEditProfile, onKalenderNotifikasi }) {
+export default function Profile({ onBack, onNavigate, onLogout, onEditProfile, onKalenderNotifikasi, onBahasa, onPrivasi, onBantuan }) {
   const { user, logout } = useAuth();
   const [activeNav, setActiveNav] = useState(3);
   const [notifOn,   setNotifOn]   = useState(true);
@@ -83,6 +84,50 @@ export default function Profile({ onBack, onNavigate, onLogout, onEditProfile, o
   const [photo, setPhoto] = useState(() => {
     return localStorage.getItem(`nutrisi_photo_${user?.id}`) || null;
   });
+
+  /* ─── Stats dihitung dari riwayat user ─── */
+  const [stats, setStats] = useState({ hariTercatat: 0, rataAKG: 0, streak: 0 });
+
+  useEffect(() => {
+    let cancelled = false;
+    const akgTarget = user?.akgTargets?.kkal || 1400;
+
+    api.getHistory()
+      .then((history) => {
+        if (cancelled || !Array.isArray(history)) return;
+
+        // Hari Tercatat: jumlah hari unik yang punya log makanan
+        const hariTercatat = history.length;
+
+        // Rata-rata AKG: persentase pencapaian energi rata-rata terhadap target
+        let totalPersen = 0;
+        history.forEach((h) => {
+          const persen = Math.min((h.kkal / akgTarget) * 100, 100);
+          totalPersen += persen;
+        });
+        const rataAKG = hariTercatat > 0 ? Math.round(totalPersen / hariTercatat) : 0;
+
+        // Streak: jumlah hari berturut-turut sampai hari ini
+        const dateSet = new Set(history.map((h) => h.date));
+        let streak = 0;
+        const today = new Date();
+        for (let i = 0; i < 365; i++) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - i);
+          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          if (dateSet.has(key)) {
+            streak++;
+          } else {
+            break;
+          }
+        }
+
+        setStats({ hariTercatat, rataAKG, streak });
+      })
+      .catch(() => { /* biarkan default 0 kalau gagal */ });
+
+    return () => { cancelled = true; };
+  }, [user?.id, user?.akgTargets?.kkal]);
 
   const handlePhoto = (e) => {
     const file = e.target.files?.[0];
@@ -194,9 +239,9 @@ export default function Profile({ onBack, onNavigate, onLogout, onEditProfile, o
   const renderStatsRow = () => (
     <div className="grid grid-cols-3 gap-2.5">
       {[
-        { val:'28', label:'Hari Tercatat', color:'#f2658f', bg:'#fce4ec' },
-        { val:'85%', label:'Rata-rata AKG', color:'#22C55E', bg:'#F0FDF4' },
-        { val:'3', label:'Hari Streak 🔥', color:'#F97316', bg:'#FFF7ED' },
+        { val: String(stats.hariTercatat), label:'Hari Tercatat', color:'#f2658f', bg:'#fce4ec' },
+        { val: `${stats.rataAKG}%`, label:'Rata-rata AKG', color:'#22C55E', bg:'#F0FDF4' },
+        { val: String(stats.streak), label:'Hari Streak 🔥', color:'#F97316', bg:'#FFF7ED' },
       ].map((s) => (
         <div key={s.label} className="bg-white rounded-[14px] px-3 py-3 text-center shadow-sm border border-gray-50">
           <p className="font-bold text-[20px] leading-none" style={{ color: s.color }}>{s.val}</p>
@@ -212,9 +257,12 @@ export default function Profile({ onBack, onNavigate, onLogout, onEditProfile, o
       <SettingRow icon={<BellIcon />} label="Notifikasi"
         value={notifOn ? 'Aktif' : 'Nonaktif'}
         onClick={() => onKalenderNotifikasi?.()} />
-      <SettingRow icon={<LangIcon />} label="Bahasa" value="Bahasa Indonesia" />
-      <SettingRow icon={<LockIcon />} label="Privasi & Keamanan" />
-      <SettingRow icon={<HelpIcon />} label="Bantuan & FAQ" />
+      <SettingRow icon={<LangIcon />} label="Bahasa" value="Bahasa Indonesia"
+        onClick={() => onBahasa?.()} />
+      <SettingRow icon={<LockIcon />} label="Privasi & Keamanan"
+        onClick={() => onPrivasi?.()} />
+      <SettingRow icon={<HelpIcon />} label="Bantuan & FAQ"
+        onClick={() => onBantuan?.()} />
     </div>
   );
 
@@ -368,9 +416,9 @@ export default function Profile({ onBack, onNavigate, onLogout, onEditProfile, o
               {/* Stats horizontal */}
               <div className="flex w-full gap-2">
                 {[
-                  { val:'28', label:'Hari', color:'#f2658f', bg:'#fce4ec' },
-                  { val:'85%', label:'AKG', color:'#22C55E', bg:'#F0FDF4' },
-                  { val:'3🔥', label:'Streak', color:'#F97316', bg:'#FFF7ED' },
+                  { val: String(stats.hariTercatat), label:'Hari', color:'#f2658f', bg:'#fce4ec' },
+                  { val: `${stats.rataAKG}%`, label:'AKG', color:'#22C55E', bg:'#F0FDF4' },
+                  { val: `${stats.streak}🔥`, label:'Streak', color:'#F97316', bg:'#FFF7ED' },
                 ].map((s) => (
                   <div key={s.label} className="flex-1 rounded-[12px] px-2 py-2.5 text-center"
                        style={{ backgroundColor: s.bg }}>

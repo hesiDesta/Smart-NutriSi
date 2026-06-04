@@ -13,6 +13,9 @@ import DetailAKG       from './pages/DetailAKG';
 import Rekomendasi     from './pages/Rekomendasi';
 import EditProfile     from './pages/EditProfile';
 import KalenderNotifikasi from './pages/KalenderNotifikasi';
+import Bahasa          from './pages/Bahasa';
+import Privasi         from './pages/Privasi';
+import Bantuan         from './pages/Bantuan';
 import LoadingErrorDemo, { LoadingScreen } from './pages/LoadingError';
 
 /* Peta tab index bottom nav → halaman */
@@ -61,7 +64,15 @@ function App() {
                                                   onNavigate={goNav}
                                                   onLogout={() => go('login', true)}
                                                   onEditProfile={() => go('editProfile', true)}
-                                                  onKalenderNotifikasi={() => go('kalenderNotifikasi', true)} />}
+                                                  onKalenderNotifikasi={() => go('kalenderNotifikasi', true)}
+                                                  onBahasa={() => go('bahasa', true)}
+                                                  onPrivasi={() => go('privasi', true)}
+                                                  onBantuan={() => go('bantuan', true)} />}
+
+      {page === 'bahasa'       && <Bahasa         onBack={() => go('profile', true)} />}
+      {page === 'privasi'      && <Privasi        onBack={() => go('profile', true)}
+                                                  onLogout={() => go('login', true)} />}
+      {page === 'bantuan'      && <Bantuan        onBack={() => go('profile', true)} />}
 
       {page === 'editProfile'  && <EditProfile    onBack={() => go('profile', true)}
                                                   onNavigate={goNav}

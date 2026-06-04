@@ -150,7 +150,9 @@ export default function Personalisasi({ onSelesai }) {
     tinggiBadan: '',
     beratBadan: '',
     alergi: '',
+    alergiLainnya: '',
     kondisiKhusus: '',
+    kondisiKhususLainnya: '',
   });
 
   const set = (field) => (e) => {
@@ -184,14 +186,22 @@ export default function Personalisasi({ onSelesai }) {
     setApiLoading(true);
     setApiError('');
     try {
+      // Jika user pilih "Lainnya", pakai input teks; jika kosong, default 'Lainnya'
+      const alergiValue = form.alergi === 'lainnya'
+        ? (form.alergiLainnya.trim() || 'Lainnya')
+        : (form.alergi || 'Tidak ada');
+      const kondisiValue = form.kondisiKhusus === 'lainnya'
+        ? (form.kondisiKhususLainnya.trim() || 'Lainnya')
+        : (form.kondisiKhusus || 'Tidak ada');
+
       const payload = {
         namaAnak: form.namaAnak.trim(),
         tanggalLahir: form.tanggalLahir,
         jenisKelamin: form.jenisKelamin,
         tinggiBadan: parseFloat(form.tinggiBadan),
         beratBadan: parseFloat(form.beratBadan),
-        alergi: form.alergi || 'Lainnya',
-        kondisiKhusus: form.kondisiKhusus || 'Lainnya',
+        alergi: alergiValue,
+        kondisiKhusus: kondisiValue,
       };
       const res = await api.personalize(payload);
       updateProfile(res.childProfile, res.akgTargets, res.parentName);
@@ -254,6 +264,14 @@ export default function Personalisasi({ onSelesai }) {
               { value: 'lainnya',  label: 'Lainnya' },
             ]}
           />
+          {form.alergi === 'lainnya' && (
+            <TInput
+              type="text"
+              placeholder="Tulis alergi anak..."
+              value={form.alergiLainnya}
+              onChange={set('alergiLainnya')}
+            />
+          )}
         </Field>
         <Field label="Kondisi Khusus">
           <TSelect
@@ -268,6 +286,14 @@ export default function Personalisasi({ onSelesai }) {
               { value: 'lainnya',           label: 'Lainnya' },
             ]}
           />
+          {form.kondisiKhusus === 'lainnya' && (
+            <TInput
+              type="text"
+              placeholder="Tulis kondisi khusus anak..."
+              value={form.kondisiKhususLainnya}
+              onChange={set('kondisiKhususLainnya')}
+            />
+          )}
         </Field>
       </>
     );
