@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 
-const BASE = import.meta.env.VITE_API_URL || 'https://bc93e80a027674.lhr.life/api';
+const BASE = import.meta.env.VITE_API_URL || 'https://7d63be77ec7813.lhr.life/api';
 
 const getToken = () => localStorage.getItem('nutrisi_token');
 
