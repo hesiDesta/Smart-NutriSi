@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 
-const BASE = import.meta.env.VITE_API_URL || 'https://7d63be77ec7813.lhr.life/api';
+const BASE = import.meta.env.VITE_API_URL || 'https://smart-nutrisi-tracker.loca.lt/api';
 
 const getToken = () => localStorage.getItem('nutrisi_token');
 
@@ -15,6 +15,7 @@ const axiosInstance = axios.create({
   baseURL: BASE,
   headers: {
     'Content-Type': 'application/json',
+    'Bypass-Tunnel-Reminder': 'true'
   },
 });
 
