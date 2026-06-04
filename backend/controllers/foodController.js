@@ -7,7 +7,7 @@ let foods = [];
 function loadFoodsCSV() {
   return new Promise((resolve, reject) => {
     // Note: final_dataset.csv is in the workspace root, which is 2 directories up from this controller
-    const csvPath = path.join(__dirname, '../../final_dataset.csv');
+   const csvPath = path.join(__dirname, '../final_dataset.csv');
     const parsedFoods = [];
     
     if (!fs.existsSync(csvPath)) {
