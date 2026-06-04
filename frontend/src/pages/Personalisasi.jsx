@@ -22,7 +22,7 @@ const ChevronDown = () => (
 /* ─── Input putih pill dengan pink glow ─── */
 function Field({ label, children }) {
   return (
-    <div className="flex flex-col w-full gap-1.5">
+    <div className="flex flex-col w-full min-w-0 gap-1.5">
       <span className="text-[#000] text-[15px] font-medium ml-1">{label}</span>
       {children}
     </div>
@@ -30,10 +30,11 @@ function Field({ label, children }) {
 }
 
 const inputClass =
-  'w-full h-[48px] rounded-[42px] px-5 bg-white outline-none ' +
+  'w-full max-w-full min-w-0 box-border h-[48px] rounded-[42px] px-5 bg-white outline-none ' +
   'text-[14px] font-medium text-gray-500 placeholder-gray-400 ' +
   'shadow-[0_0_0_3px_rgba(242,101,143,0.35)] ' +
-  'focus:shadow-[0_0_0_3px_rgba(242,101,143,0.6)] transition-all';
+  'focus:shadow-[0_0_0_3px_rgba(242,101,143,0.6)] transition-all ' +
+  'appearance-none';
 
 function TInput({ type = 'text', placeholder, value, onChange }) {
   return (
@@ -43,6 +44,7 @@ function TInput({ type = 'text', placeholder, value, onChange }) {
       value={value}
       onChange={onChange}
       className={inputClass}
+      style={type === 'date' ? { WebkitAppearance: 'none', appearance: 'none' } : undefined}
     />
   );
 }
@@ -397,7 +399,7 @@ export default function Personalisasi({ onSelesai }) {
               <div
                 key={`f${step}`}
                 className="bg-[#f39ab4] rounded-[18px] px-5 py-5
-                           flex flex-col gap-4 mb-6
+                           flex flex-col gap-4 mb-6 min-w-0 overflow-hidden
                            anim-fade-up anim-d2"
               >
                 {renderFields()}
