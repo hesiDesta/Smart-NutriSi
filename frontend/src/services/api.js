@@ -38,7 +38,26 @@ axiosInstance.interceptors.response.use(
     if (!error.response) {
       throw new Error('Tidak bisa terhubung ke server. Pastikan backend berjalan.');
     }
-    const message = error.response?.data?.error || `Error ${error.response.status}`;
+    
+    let message = `Error ${error.response.status}`;
+    const responseData = error.response.data;
+    
+    if (responseData) {
+      if (typeof responseData === 'string') {
+        message = responseData;
+      } else if (typeof responseData === 'object') {
+        if (responseData.error) {
+          if (typeof responseData.error === 'string') {
+            message = responseData.error;
+          } else if (typeof responseData.error === 'object') {
+            message = responseData.error.message || responseData.error.error || JSON.stringify(responseData.error);
+          }
+        } else if (responseData.message) {
+          message = responseData.message;
+        }
+      }
+    }
+    
     throw new Error(message);
   }
 );
