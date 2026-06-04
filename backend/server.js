@@ -50,4 +50,11 @@ async function startServer() {
   }
 }
 
-startServer();
+if (process.env.VERCEL) {
+  initDb().catch(err => console.error('Database init error:', err));
+  foodController.loadFoodsCSV().catch(err => console.error('CSV load error:', err));
+} else {
+  startServer();
+}
+
+module.exports = app;

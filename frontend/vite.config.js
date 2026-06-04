@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  base: '/Smart-Nutrion-Trakcer/',
+  base: process.env.VERCEL ? '/' : '/Smart-Nutrion-Trakcer/',
   plugins: [
     react(),
     tailwindcss(),
