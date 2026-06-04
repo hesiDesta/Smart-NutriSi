@@ -1,5 +1,7 @@
 # NutriSi — Panduan Menjalankan
 
+[![Deploy to Render](https://render.com/images/deploy-to-render.svg)](https://render.com/deploy?repo=https://github.com/MuhammadFadliRahmansyahG1A023005/Smart-Nutrion-Trakcer)
+
 ## Struktur Folder
 ```
 NutriSi/

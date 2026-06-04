@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: smart-nutrition-backend
+    runtime: node
+    repo: https://github.com/MuhammadFadliRahmansyahG1A023005/Smart-Nutrion-Trakcer
+    branch: main
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_HOST
+        placeholder: Host database dari Clever Cloud (misal bx8...-mysql.services.clever-cloud.com)
+      - key: DB_USER
+        placeholder: Username database (misal uon...)
+      - key: DB_PASSWORD
+        placeholder: Password database Anda
+      - key: DB_NAME
+        placeholder: Nama database Anda (misal bx8...)
+      - key: DB_PORT
+        value: 3306
