@@ -10,23 +10,16 @@ const SparkIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="#f
 const HomeIcon   = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>;
 const ClockIcon  = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="12" cy="12" r="9"/><path strokeLinecap="round" d="M12 7v5l3 3"/></svg>;
 const MenuIcon   = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>;
+const RobotIcon  = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1" fill="currentColor"/><circle cx="9" cy="13" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.2" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg>;
 const PersonIcon = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>;
 const PlusIcon   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>;
 const CheckIcon  = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>;
 
 const stickerShadow = `3px 3px 0px #ffcecf,-3px -3px 0px #ffcecf,3px -3px 0px #ffcecf,-3px 3px 0px #ffcecf,0px 4px 0px #ffcecf,0px -4px 0px #ffcecf,4px 0px 0px #ffcecf,-4px 0px 0px #ffcecf`;
 
-/* ── Data ───────────────────────────────────────── */
-const MEAL_TABS = [
-  { label:'Sarapan',     emoji:'🌅' },
-  { label:'Cemilan',     emoji:'🍎' },
-  { label:'Makan Siang', emoji:'☀️' },
-  { label:'Makan Malam', emoji:'🌙' },
-];
-
 /* ── Bottom Nav ─────────────────────────────────── */
-function BottomNav({ active = 2, onSelect }) {
-  const items = [HomeIcon, ClockIcon, MenuIcon, PersonIcon];
+function BottomNav({ active = 3, onSelect }) {
+  const items = [HomeIcon, ClockIcon, PlusIcon, RobotIcon, PersonIcon];
   return (
     <div className="flex justify-center">
       <div className="bg-[#f2658f] rounded-full px-2.5 py-2 flex items-center gap-1.5 shadow-xl">
@@ -268,10 +261,9 @@ function RecipeModal({ rec, onClose, onAdd, added, loadingPrediction }) {
 export default function Rekomendasi({ onBack, onNavigate }) {
   const { user } = useAuth();
   const childName = user?.childProfile?.namaAnak || 'Anak';
-  const [activeTab, setActiveTab] = useState(0);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [bottomBarHidden, setBottomBarHidden] = useState(false);
-  const [activeNav, setActiveNav] = useState(2);
+  const [activeNav, setActiveNav] = useState(3);
 
   const [recs, setRecs]                 = useState({});
   const [deficiencies, setDeficiencies] = useState([]);
@@ -422,9 +414,6 @@ export default function Rekomendasi({ onBack, onNavigate }) {
     return () => { active = false; };
   }, []);
 
-  const currentTabName = MEAL_TABS[activeTab].label;
-  const currentTabRecs = recs[currentTabName] || [];
-
   if (loading) {
     return (
       <div className="font-['Poppins'] bg-pink-base min-h-screen flex flex-col items-center justify-center">
@@ -540,18 +529,6 @@ export default function Rekomendasi({ onBack, onNavigate }) {
                 Bahan makanan tidak ditemukan di database.
               </div>
             )}
-          </div>
-
-          {/* Meal tabs */}
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar anim-fade-up anim-d3 mb-3">
-            {MEAL_TABS.map((t,i) => (
-              <button key={i} onClick={() => setActiveTab(i)}
-                className={`flex-1 py-2 rounded-full text-[12px] font-semibold
-                            whitespace-nowrap transition-all flex-shrink-0
-                            ${activeTab===i ? 'bg-[#f2658f] text-white shadow' : 'bg-white text-gray-600 hover:text-[#f2658f]'}`}>
-                <span>{t.emoji}</span>{t.label}
-              </button>
-            ))}
           </div>
 
           {!searchQuery && (
@@ -799,17 +776,6 @@ export default function Rekomendasi({ onBack, onNavigate }) {
                   Bahan makanan tidak ditemukan di database.
                 </div>
               )}
-            </div>
-
-            {/* Meal tabs */}
-            <div className="flex gap-2 mb-4">
-              {MEAL_TABS.map((t,i) => (
-                <button key={i} onClick={() => setActiveTab(i)}
-                  className={`flex-1 py-3 rounded-2xl text-[13px] font-bold transition-all flex items-center justify-center gap-2
-                              ${activeTab===i ? 'bg-[#f2658f] text-white shadow-md scale-102' : 'bg-white text-gray-600 hover:text-[#f2658f] border border-gray-100'}`}>
-                  <span>{t.emoji}</span>{t.label}
-                </button>
-              ))}
             </div>
 
             {!searchQuery && (

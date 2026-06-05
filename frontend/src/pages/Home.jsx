@@ -26,6 +26,7 @@ const getStatus = (pct) => {
 const HomeIcon   = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>;
 const ClockIcon  = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="12" cy="12" r="9"/><path strokeLinecap="round" d="M12 7v5l3 3"/></svg>;
 const MenuIcon   = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>;
+const RobotIcon  = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1" fill="currentColor"/><circle cx="9" cy="13" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.2" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg>;
 const PersonIcon = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>;
 const BellIcon   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>;
 const ChevLeft   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>;
@@ -144,7 +145,7 @@ function DateNav({ date, onPrev, onNext }) {
    BOTTOM NAV PILL
    ═══════════════════════════════════════════════════ */
 function BottomNav({ active = 0, onSelect }) {
-  const items = [HomeIcon, ClockIcon, MenuIcon, PersonIcon];
+  const items = [HomeIcon, ClockIcon, PlusIcon, RobotIcon, PersonIcon];
   return (
     <div className="flex justify-center">
       <div className="bg-[#f2658f] rounded-full px-2.5 py-2 flex items-center gap-1.5 shadow-xl">
@@ -424,7 +425,7 @@ export default function Home({ onLogMakanan, onDetailAKG, onRekomendasi, onNavig
 
         {/* Bottom Nav */}
         <div className="fixed bottom-0 left-0 right-0 pb-5 pt-2 bg-gradient-to-t from-pink-100/80 to-transparent">
-          <BottomNav active={activeNav} onSelect={(i) => { setActiveNav(i); if (i===2) onRekomendasi?.(); else onNavigate?.(i); }} />
+          <BottomNav active={activeNav} onSelect={(i) => { setActiveNav(i); onNavigate?.(i); }} />
         </div>
       </div>
 
@@ -567,7 +568,7 @@ export default function Home({ onLogMakanan, onDetailAKG, onRekomendasi, onNavig
 
           {/* Bottom Nav */}
           <div className="pt-4 pb-5 anim-fade-up anim-d6">
-            <BottomNav active={activeNav} onSelect={(i) => { setActiveNav(i); if (i===2) onRekomendasi?.(); else onNavigate?.(i); }} />
+            <BottomNav active={activeNav} onSelect={(i) => { setActiveNav(i); onNavigate?.(i); }} />
           </div>
         </div>
 

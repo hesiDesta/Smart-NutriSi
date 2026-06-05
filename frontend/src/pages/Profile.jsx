@@ -9,6 +9,8 @@ import { api } from '../services/api';
 const HomeIcon   = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>;
 const ClockIcon  = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="12" cy="12" r="9"/><path strokeLinecap="round" d="M12 7v5l3 3"/></svg>;
 const MenuIcon   = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>;
+const RobotIcon  = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1" fill="currentColor"/><circle cx="9" cy="13" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.2" fill="currentColor" stroke="none"/><path d="M9.5 16.5h5"/></svg>;
+const PlusIcon   = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>;
 const PersonIcon = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>;
 const ChevLeft   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>;
 const ChevRight2 = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>;
@@ -22,8 +24,8 @@ const CameraIcon = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="n
 const StarIcon   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="#f2658f"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>;
 
 /* ── Bottom Nav ── */
-function BottomNav({ active = 3, onSelect }) {
-  const items = [HomeIcon, ClockIcon, MenuIcon, PersonIcon];
+function BottomNav({ active = 4, onSelect }) {
+  const items = [HomeIcon, ClockIcon, PlusIcon, RobotIcon, PersonIcon];
   return (
     <div className="flex justify-center">
       <div className="bg-[#f2658f] rounded-full px-2.5 py-2 flex items-center gap-1.5 shadow-xl">
@@ -78,7 +80,7 @@ const AvatarPlaceholder = ({ size = 80 }) => (
    ═══════════════════════════════════════════════════════ */
 export default function Profile({ onBack, onNavigate, onLogout, onEditProfile, onKalenderNotifikasi, onBahasa, onPrivasi, onBantuan }) {
   const { user, logout } = useAuth();
-  const [activeNav, setActiveNav] = useState(3);
+  const [activeNav, setActiveNav] = useState(4);
   const [notifOn,   setNotifOn]   = useState(true);
   const fileRef = useRef(null);
   const [photo, setPhoto] = useState(() => {
