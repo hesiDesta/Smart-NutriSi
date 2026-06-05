@@ -1,6 +1,7 @@
 import logoImg from '../assets/logo.png';
 import React, { useState, useEffect, useCallback } from 'react';
 import { api, toDateKey } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
 
@@ -137,10 +138,10 @@ function MealGroup({ waktu, jam, items }) {
 }
 
 /* ── Grand Total Card ── */
-function GrandTotal({ meals }) {
+function GrandTotal({ meals, akgTarget = 1350 }) {
   const all = meals.flatMap((m) => m.items);
   const total = sumMeal(all);
-  const TARGET = { kkal:1125, protein:30, kalsium:850 };
+  const TARGET = { kkal: akgTarget };
   const pct = Math.min(Math.round(total.kkal / TARGET.kkal * 100), 100);
   const color = pct >= 90 ? '#22C55E' : pct >= 60 ? '#F97316' : '#EF4444';
 
@@ -170,7 +171,7 @@ function GrandTotal({ meals }) {
       {/* Progress bar energi */}
       <div className="mt-3">
         <div className="flex justify-between mb-1">
-          <span className="text-[10px] text-gray-500 font-medium">Energi dari target 1.125 kkal</span>
+          <span className="text-[10px] text-gray-500 font-medium">Energi dari target {akgTarget.toLocaleString('id-ID')} kkal</span>
           <span className="text-[10px] font-bold" style={{ color }}>{pct}%</span>
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -186,6 +187,8 @@ function GrandTotal({ meals }) {
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════ */
 export default function Riwayat({ onBack, onNavigate }) {
+  const { user } = useAuth();
+  const akgTarget = user?.akgTargets?.kkal || 1350;
   const [date,      setDate]      = useState(new Date());
   const [activeNav, setActiveNav] = useState(1);
   const [meals,     setMeals]     = useState([]);
@@ -200,7 +203,7 @@ export default function Riwayat({ onBack, onNavigate }) {
     api.getHistory().then((history) => {
       if (cancelled || !Array.isArray(history)) return;
 
-      const akgTarget = 1400; // target rata-rata anak golden age
+      // akgTarget diambil dari user context (sudah didefinisikan di atas)
 
       // Index history by date string YYYY-MM-DD
       const map = {};
@@ -318,7 +321,7 @@ export default function Riwayat({ onBack, onNavigate }) {
                 {meals.map((m, i) => (
                   <MealGroup key={i} waktu={m.waktu} jam={m.jam} items={m.items} />
                 ))}
-                <GrandTotal meals={meals} />
+                <GrandTotal meals={meals} akgTarget={akgTarget} />
               </>
             )}
           </div>
@@ -388,7 +391,7 @@ export default function Riwayat({ onBack, onNavigate }) {
             {/* Scrollable Upper Content */}
             <div className="flex-1 overflow-y-auto no-scrollbar space-y-4 pr-1 pb-2">
               {/* Grand Total */}
-              {meals.length > 0 && <GrandTotal meals={meals} />}
+              {meals.length > 0 && <GrandTotal meals={meals} akgTarget={akgTarget} />}
 
               {/* Grafik mingguan */}
               <div className="bg-white rounded-[18px] px-5 py-4 shadow-sm border border-gray-50">
