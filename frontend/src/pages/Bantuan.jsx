@@ -128,12 +128,12 @@ export default function Bantuan({ onBack }) {
         <div className="bg-white rounded-[18px] px-5 py-4 shadow-sm border border-gray-50">
           <p className="text-gray-700 font-bold text-[14px] mb-3">Masih butuh bantuan?</p>
           <div className="flex flex-col gap-2">
-            <a href="mailto:CC26-PSU388@student.devacademy.id"
+            <a href="mailto:support@nutrisi.id"
               className="flex items-center gap-3 px-4 py-3 bg-[#fce4ec]/50 hover:bg-[#fce4ec] rounded-[12px] transition-colors">
               <span className="text-[#f2658f]"><MailIcon /></span>
               <div className="flex-1">
                 <p className="text-gray-800 font-semibold text-[13px]">Email</p>
-                <p className="text-gray-500 text-[11px]">CC26-PSU388@student.devacademy.id</p>
+                <p className="text-gray-500 text-[11px]">support@nutrisi.id</p>
               </div>
             </a>
             <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer"
